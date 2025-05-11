@@ -28,7 +28,7 @@ on:
 jobs:
   # ensure_cargo_fmt:
   #   name: Ensure 'cargo fmt' has been run
-  #   runs-on: ubuntu-20.04
+  #   runs-on: [self-hosted, linux]
   #   steps:
   #   - uses: actions-rs/toolchain@v1
   #     with:
@@ -68,7 +68,7 @@ jobs:
 
   build:
     name: ${{ matrix.job.target }} (${{ matrix.job.os }})
-    runs-on: ${{ matrix.job.os }}
+    runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
       matrix:
