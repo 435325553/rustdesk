@@ -8,9 +8,9 @@ on:
 
 jobs:
   run-flutter-nightly-build:
+    runs-on: self-hosted  # 修正：将 runs-on 移到这里
     uses: ./.github/workflows/flutter-build.yml
     secrets: inherit
     with:
       upload-artifact: true
       upload-tag: "nightly"
-      runs-on: self-hosted  
