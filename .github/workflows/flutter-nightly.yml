@@ -2,15 +2,36 @@ name: Flutter Nightly Build
 
 on:
   schedule:
-    # schedule build every night
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # 每天午夜运行
 
 jobs:
-  run-flutter-nightly-build:
-    runs-on: self-hosted  # 修正：将 runs-on 移到这里
-    uses: ./.github/workflows/flutter-build.yml
-    secrets: inherit
-    with:
-      upload-artifact: true
-      upload-tag: "nightly"
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4  # 正确的 uses 用法，属于一个步骤
+        
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2  # 另一个步骤中的 uses
+        with:
+          channel: 'stable'
+          
+      - name: Get dependencies
+        run: flutter pub get
+        
+      - name: Build app
+        run: flutter build apk
+        
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4  # 又一个步骤中的 uses
+        with:
+          name: build-artifacts
+          path: build/app/outputs/flutter-apk/
+          
+      - name: Deploy to Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1  # 带 secrets 的步骤
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
