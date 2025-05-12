@@ -68,7 +68,7 @@ jobs:
 
   build:
     name: ${{ matrix.job.target }} (${{ matrix.job.os }})
-    runs-on: [self-hosted, windows]
+    runs-on: [self-hosted, linux]
     strategy:
       fail-fast: false
       matrix:
